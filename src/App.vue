@@ -1,7 +1,8 @@
 <template>
   <div id="app">
     <HeardSeac></HeardSeac>
-    <FooterDetails></FooterDetails>
+    <router-view></router-view>
+    <FooterDetails v-show="$route.meta.show"></FooterDetails>
   </div>
 </template>
 

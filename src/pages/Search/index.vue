@@ -1,5 +1,8 @@
 <template>
-  <div></div>
+  <div>
+    <h1>params传参----{{ $route.params.keyword }}</h1>
+    <h1>query传参----{{ $route.query.k }}</h1>
+  </div>
 </template>
 
 <script>
