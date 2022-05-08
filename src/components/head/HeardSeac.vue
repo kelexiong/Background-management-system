@@ -46,6 +46,7 @@
 
 <script>
 export default {
+  name: 'HeardSeac',
   data() {
     return {
       searchtext: ''
@@ -59,7 +60,7 @@ export default {
       // 对象写法，如果使用了params传参需要给路由添加name的属性
       this.$router.push({
         name: 'search',
-        params: { k: this.searchtext },
+        params: { keyword: this.searchtext },
         query: { k: this.searchtext.toUpperCase() }
       })
     }

@@ -106,7 +106,9 @@
 </template>
 
 <script>
-export default {}
+export default {
+  name: 'FooterDetails'
+}
 </script>
 
 <style lang="less" scoped>
