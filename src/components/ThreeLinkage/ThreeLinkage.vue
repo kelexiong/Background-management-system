@@ -2,7 +2,32 @@
   <!-- 商品分类导航 -->
   <div class="type-nav">
     <div class="container">
-      <h2 class="all">{全部商品分类}</h2>
+      <div @mouseleave="deleteListbg">
+        <h2 class="all">{全部商品分类}</h2>
+        <div class="sort">
+          <div class="all-sort-list2">
+            <div class="item" v-for="(list1, index) in getThreelist" :key="list1.categoryId" :class="{ listbackgorundcolor: Addcalssbcflg === index }">
+              <h3 @mouseenter="Addcalssbc(index)">
+                <a href="">{{ list1.categoryName }}</a>
+              </h3>
+              <div class="item-list clearfix">
+                <div class="subitem">
+                  <dl class="fore" v-for="(list2, index) in list1.categoryChild" :key="list2.categoryId">
+                    <dt>
+                      <a href="">{{ list2.categoryName }}</a>
+                    </dt>
+                    <dd>
+                      <em v-for="(list3, index) in list2.categoryChild" :key="list3.categoryId">
+                        <a href="">{{ list3.categoryName }}</a>
+                      </em>
+                    </dd>
+                  </dl>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
       <nav class="nav">
         <a href="###">服装城</a>
         <a href="###">美妆馆</a>
@@ -13,29 +38,6 @@
         <a href="###">有趣</a>
         <a href="###">秒杀</a>
       </nav>
-      <div class="sort">
-        <div class="all-sort-list2">
-          <div class="item" v-for="(list1, index) in getThreelist" :key="list1.categoryId">
-            <h3>
-              <a href="">{{ list1.categoryName }}</a>
-            </h3>
-            <div class="item-list clearfix">
-              <div class="subitem">
-                <dl class="fore" v-for="(list2, index) in list1.categoryChild" :key="list2.categoryId">
-                  <dt>
-                    <a href="">{{ list2.categoryName }}</a>
-                  </dt>
-                  <dd>
-                    <em v-for="(list3, index) in list2.categoryChild" :key="list3.categoryId">
-                      <a href="">{{ list3.categoryName }}</a>
-                    </em>
-                  </dd>
-                </dl>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
     </div>
   </div>
 </template>
@@ -46,7 +48,7 @@ export default {
   name: 'ThreeLinkage',
   data() {
     return {
-      str: []
+      Addcalssbcflg: -1
     }
   },
   mounted() {
@@ -59,6 +61,15 @@ export default {
         return state.homestore.threelistdata
       }
     })
+  },
+  methods: {
+    Addcalssbc(index) {
+      this.Addcalssbcflg = index
+      console.log(index)
+    },
+    deleteListbg() {
+      this.Addcalssbcflg = -1
+    }
   }
 }
 </script>
@@ -178,6 +189,9 @@ export default {
               display: block;
             }
           }
+        }
+        .listbackgorundcolor {
+          background-color: lightpink;
         }
       }
     }
