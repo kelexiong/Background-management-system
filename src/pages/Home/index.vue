@@ -5,6 +5,9 @@
     <TodayRecommend></TodayRecommend>
     <Rank></Rank>
     <LikeThings></LikeThings>
+    <Floor></Floor>
+    <Floor></Floor>
+    <Brand></Brand>
   </div>
 </template>
 
@@ -13,6 +16,8 @@ import ListBanner from '@/pages/Home/ListBanner/ListBanner'
 import TodayRecommend from './TodayRecommend/TodayRecommend.vue'
 import Rank from './Rank/Rank.vue'
 import LikeThings from './LikeThings/LikeThings.vue'
+import Floor from './Floor/Floor.vue'
+import Brand from './brand/Brand.vue'
 
 export default {
   name: 'Home',
@@ -20,7 +25,9 @@ export default {
     ListBanner,
     TodayRecommend,
     Rank,
-    LikeThings
+    LikeThings,
+    Floor,
+    Brand
   }
 }
 </script>

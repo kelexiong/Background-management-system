@@ -6,6 +6,7 @@ import Home from '@/pages/Home'
 import Login from '@/pages/Login'
 import Reigers from '@/pages/Reigers'
 import Search from '@/pages/Search'
+
 Vue.use(VueRouter)
 
 const router = new VueRouter({
