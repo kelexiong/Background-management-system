@@ -57,8 +57,6 @@ export default {
     }
   },
   mounted() {
-    // 给home小仓库数据
-    this.$store.dispatch('getThreelist')
     console.log(this.$route)
     // debugger
     if (this.$route.path !== '/home' && this.$route.path !== '/') {
