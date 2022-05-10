@@ -3,30 +3,32 @@
   <div class="type-nav">
     <div class="container">
       <div @mouseleave="deleteListbg">
-        <h2 class="all">{全部商品分类}</h2>
-        <div class="sort">
-          <div class="all-sort-list2">
-            <div class="item" v-for="(list1, index) in getThreelist" :key="list1.categoryId" :class="{ listbackgorundcolor: Addcalssbcflg === index }">
-              <h3 @mouseenter="Addcalssbc(index)">
-                <a href="">{{ list1.categoryName }}</a>
-              </h3>
-              <div class="item-list clearfix">
-                <div class="subitem">
-                  <dl class="fore" v-for="(list2, index) in list1.categoryChild" :key="list2.categoryId">
-                    <dt>
-                      <a href="">{{ list2.categoryName }}</a>
-                    </dt>
-                    <dd>
-                      <em v-for="(list3, index) in list2.categoryChild" :key="list3.categoryId">
-                        <a href="">{{ list3.categoryName }}</a>
-                      </em>
-                    </dd>
-                  </dl>
+        <h2 class="all" @mouseenter="showthreelist">{全部商品分类}</h2>
+        <transition name="slow">
+          <div class="sort" v-show="show">
+            <div class="all-sort-list2" @click.prevent="getlistelement">
+              <div class="item" v-for="(list1, index) in getThreelist" :key="list1.categoryId" :class="{ listbackgorundcolor: Addcalssbcflg === index }">
+                <h3 @mouseenter="Addcalssbc(index)">
+                  <a href="" :data-category1Id="list1.categoryId" :data-categoryName="list1.categoryName">{{ list1.categoryName }}</a>
+                </h3>
+                <div class="item-list clearfix" :style="{ display: Addcalssbcflg === index ? 'block' : 'none' }">
+                  <div class="subitem">
+                    <dl class="fore" v-for="list2 in list1.categoryChild" :key="list2.categoryId">
+                      <dt>
+                        <a href="" :data-category2Id="list2.categoryId" :data-categoryName="list2.categoryName">{{ list2.categoryName }}</a>
+                      </dt>
+                      <dd>
+                        <em v-for="list3 in list2.categoryChild" :key="list3.categoryId">
+                          <a href="" :data-category3Id="list3.categoryId" :data-categoryName="list3.categoryName">{{ list3.categoryName }}</a>
+                        </em>
+                      </dd>
+                    </dl>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
-        </div>
+        </transition>
       </div>
       <nav class="nav">
         <a href="###">服装城</a>
@@ -44,16 +46,28 @@
 
 <script>
 import { mapState } from 'vuex'
+import throttle from 'lodash/throttle'
 export default {
   name: 'ThreeLinkage',
   data() {
     return {
-      Addcalssbcflg: -1
+      Addcalssbcflg: -1,
+      show: true
+      // timer: null
     }
   },
   mounted() {
     // 给home小仓库数据
     this.$store.dispatch('getThreelist')
+    console.log(this.$route)
+    // debugger
+    if (this.$route.path !== '/home' && this.$route.path !== '/') {
+      // console.log(this.$route.path)
+      this.show = false
+    } else {
+      this.show = true
+      console.log(111)
+    }
   },
   computed: {
     ...mapState({
@@ -63,14 +77,47 @@ export default {
     })
   },
   methods: {
-    Addcalssbc(index) {
+    // Addcalssbc(index) {
+    //   // // if (this.flg) {
+    //   // //   this.flg = false
+    //   // clearTimeout(this.timer)
+    //   // this.timer = setTimeout(() => {
+    //   //   this.Addcalssbcflg = index
+    //   //   console.log(index)
+    //   //   // this.flg = true
+    //   // }, 100)
+    //   // }
+    // },
+
+    Addcalssbc: throttle(function (index) {
       this.Addcalssbcflg = index
-      console.log(index)
-    },
+    }, 50),
     deleteListbg() {
       this.Addcalssbcflg = -1
+      if (this.$route.path !== '/home' && this.$route.path !== '/') this.show = false
+    },
+    getlistelement(e) {
+      let node = e.target.dataset
+      let { categoryname, category1id, category2id, category3id } = node
+      if (categoryname) {
+        let path = { name: 'search', query: { categoryName: categoryname } }
+        if (category1id) {
+          path.query.category1Id = category1id
+        } else if (category2id) {
+          path.query.category2Id = category2id
+        } else {
+          path.query.category3Id = category3id
+        }
+        this.$router.push(path)
+        // console.log(path)
+      }
+    },
+    // 鼠标引入显示三级列表
+    showthreelist() {
+      this.show = true
     }
-  }
+  },
+  updated() {}
 }
 </script>
 
@@ -184,16 +231,28 @@ export default {
             }
           }
 
-          &:hover {
-            .item-list {
-              display: block;
-            }
-          }
+          // &:hover {
+          //   .item-list {
+          //     display: block;
+          //   }
+          // }
         }
         .listbackgorundcolor {
           background-color: lightpink;
         }
       }
+    }
+    .slow-enter,
+    .slow-leave-to {
+      height: 0px;
+    }
+    .slow-enter-to,
+    .slow-leave {
+      height: 510px;
+    }
+    .slow-enter-active,
+    .slow-leave-active {
+      transition: all 0.2s linear;
     }
   }
 }

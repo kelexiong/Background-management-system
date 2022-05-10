@@ -60,7 +60,7 @@ export default {
       // 对象写法，如果使用了params传参需要给路由添加name的属性
       this.$router.push({
         name: 'search',
-        params: { keyword: this.searchtext },
+        // params: { keyword: this.searchtext },
         query: { k: this.searchtext.toUpperCase() }
       })
     }

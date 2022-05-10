@@ -15,7 +15,7 @@ const router = new VueRouter({
     { path: '/home', component: Home, meta: { show: true } },
     { path: '/login', component: Login },
     { path: '/reigers', component: Reigers },
-    { path: '/search/:keyword', component: Search, meta: { show: true }, name: 'search' }
+    { path: '/search/:keyword?', component: Search, meta: { show: true }, name: 'search' }
   ]
 })
 export default router

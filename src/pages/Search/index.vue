@@ -1,13 +1,17 @@
 <template>
   <div>
-    <h1>params传参----{{ $route.params.keyword }}</h1>
-    <h1>query传参----{{ $route.query.k }}</h1>
+    <ThreeLinkage></ThreeLinkage>
   </div>
 </template>
 
 <script>
+import ThreeLinkage from '@/components/ThreeLinkage/ThreeLinkage.vue'
+ThreeLinkage
 export default {
-  name: 'Search'
+  name: 'Search',
+  components: {
+    ThreeLinkage
+  }
 }
 </script>
 
