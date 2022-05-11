@@ -57,14 +57,14 @@ export default {
     }
   },
   mounted() {
-    console.log(this.$route)
+    // console.log(this.$route)
     // debugger
     if (this.$route.path !== '/home' && this.$route.path !== '/') {
       // console.log(this.$route.path)
       this.show = false
     } else {
       this.show = true
-      console.log(111)
+      // console.log(111)
     }
   },
   computed: {

@@ -58,11 +58,19 @@ export default {
       // 字符串拼接写法
       // this.$router.push(`/search/${this.searchtext}`)
       // 对象写法，如果使用了params传参需要给路由添加name的属性
-      this.$router.push({
+      // this.$router.push({
+      //   name: 'search',
+      //   params: { keyword: this.searchtext || undefined }
+      //   // query: { k: this.searchtext.toUpperCase() }
+      // })
+      let path = {
         name: 'search',
-        // params: { keyword: this.searchtext },
-        query: { k: this.searchtext.toUpperCase() }
-      })
+        params: { keyword: this.searchtext || undefined }
+      }
+      if (this.$route.query) {
+        path.query = this.$route.query
+      }
+      this.$router.push(path)
     }
   }
 }

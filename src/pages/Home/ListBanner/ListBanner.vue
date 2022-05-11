@@ -4,19 +4,10 @@
     <div class="sortList clearfix">
       <div class="center">
         <!--banner轮播-->
-        <div class="swiper-container" id="mySwiper">
+        <div class="swiper-container" ref="mySwiper">
           <div class="swiper-wrapper">
-            <div class="swiper-slide">
-              <img src="./images/banner/ys1.png" />
-            </div>
-            <div class="swiper-slide">
-              <img src="./images/banner/ys1.png" />
-            </div>
-            <div class="swiper-slide">
-              <img src="./images/banner/ys1.png" />
-            </div>
-            <div class="swiper-slide">
-              <img src="./images/banner/ys1.png" />
+            <div class="swiper-slide" v-for="(getbanners, index) in getlistbanner" :key="getbanners.id">
+              <img :src="getbanners.imgUrl" />
             </div>
           </div>
           <!-- 如果需要分页器 -->
@@ -101,8 +92,48 @@
 </template>
 
 <script>
+import { mapState } from 'vuex'
+import Swiper from 'swiper'
 export default {
-  name: 'ListBanner'
+  name: 'ListBanner',
+  mounted() {
+    this.$store.dispatch('getbanner')
+  },
+  computed: {
+    ...mapState({
+      getlistbanner: state => state.homestore.getlistbanner
+    })
+  },
+  watch: {
+    getlistbanner: {
+      handler(nextval, oldval) {
+        this.$nextTick(() => {
+          var mySwiper = new Swiper(this.$refs.mySwiper, {
+            // direction: 'vertical', // 垂直切换选项
+            loop: true, // 循环模式选项
+            autoplay: {
+              delay: 2000 //1秒切换一次
+            },
+            // 如果需要分页器
+            pagination: {
+              el: '.swiper-pagination'
+            },
+
+            // 如果需要前进后退按钮
+            navigation: {
+              nextEl: '.swiper-button-next',
+              prevEl: '.swiper-button-prev'
+            },
+
+            // 如果需要滚动条
+            scrollbar: {
+              el: '.swiper-scrollbar'
+            }
+          })
+        })
+      }
+    }
+  }
 }
 </script>
 

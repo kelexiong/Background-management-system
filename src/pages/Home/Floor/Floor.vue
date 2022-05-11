@@ -2,29 +2,11 @@
   <div class="floor">
     <div class="py-container">
       <div class="title clearfix">
-        <h3 class="fl">家用电器</h3>
+        <h3 class="fl">{{ floorListData.name }}</h3>
         <div class="fr">
           <ul class="nav-tabs clearfix">
-            <li class="active">
-              <a href="#tab1" data-toggle="tab">热门</a>
-            </li>
-            <li>
-              <a href="#tab2" data-toggle="tab">大家电</a>
-            </li>
-            <li>
-              <a href="#tab3" data-toggle="tab">生活电器</a>
-            </li>
-            <li>
-              <a href="#tab4" data-toggle="tab">厨房电器</a>
-            </li>
-            <li>
-              <a href="#tab5" data-toggle="tab">应季电器</a>
-            </li>
-            <li>
-              <a href="#tab6" data-toggle="tab">空气/净水</a>
-            </li>
-            <li>
-              <a href="#tab7" data-toggle="tab">高端电器</a>
+            <li class="active" v-for="(navlist, idnex) in floorListData.navList" :key="idnex">
+              <a :href="navlist.url" data-toggle="tab">{{ navlist.text }}</a>
             </li>
           </ul>
         </div>
@@ -34,26 +16,15 @@
           <div class="floor-1">
             <div class="blockgary">
               <ul class="jd-list">
-                <li>节能补贴</li>
-                <li>4K电视</li>
-                <li>空气净化器</li>
-                <li>IH电饭煲</li>
-                <li>滚筒洗衣机</li>
-                <li>电热水器</li>
+                <li v-for="(keyword, index) in floorListData.keywords" :key="index">{{ keyword }}</li>
               </ul>
-              <img src="./images/floor-1-1.png" />
+              <img :src="floorListData.imgUrl" />
             </div>
             <div class="floorBanner">
-              <div class="swiper-container" id="floor1Swiper">
+              <div class="swiper-container" ref="floor1Swiper">
                 <div class="swiper-wrapper">
-                  <div class="swiper-slide">
-                    <img src="./images/floor-1-b01.png" />
-                  </div>
-                  <div class="swiper-slide">
-                    <img src="./images/floor-1-b02.png" />
-                  </div>
-                  <div class="swiper-slide">
-                    <img src="./images/floor-1-b03.png" />
+                  <div class="swiper-slide" v-for="(carouse, index) in floorListData.carouse1List" :key="carouse.id">
+                    <img :src="carouse.imgUrl" />
                   </div>
                 </div>
                 <!-- 如果需要分页器 -->
@@ -93,8 +64,65 @@
 </template>
 
 <script>
+import Swiper from 'swiper'
 export default {
-  name: 'Floor'
+  name: 'Floor',
+  props: ['floorListData'],
+  // watch: {
+  //   floorListData: {
+  //     handler(nextval, oldval) {
+  //       this.$nextTick(() => {
+  //         var mySwiper = new Swiper(this.$refs.floor1Swiper, {
+  //           // direction: 'vertical', // 垂直切换选项
+  //           loop: true, // 循环模式选项
+  //           autoplay: {
+  //             delay: 2000 //1秒切换一次
+  //           },
+  //           // 如果需要分页器
+  //           pagination: {
+  //             el: '.swiper-pagination'
+  //           },
+
+  //           // 如果需要前进后退按钮
+  //           navigation: {
+  //             nextEl: '.swiper-button-next',
+  //             prevEl: '.swiper-button-prev'
+  //           },
+
+  //           // 如果需要滚动条
+  //           scrollbar: {
+  //             el: '.swiper-scrollbar'
+  //           }
+  //         })
+  //       })
+  //     }
+  //   }
+  // },
+  // 这里的组件是挂载完毕后渲染的
+  mounted() {
+    var mySwiper = new Swiper(this.$refs.floor1Swiper, {
+      // direction: 'vertical', // 垂直切换选项
+      loop: true, // 循环模式选项
+      autoplay: {
+        delay: 2000 //1秒切换一次
+      },
+      // 如果需要分页器
+      pagination: {
+        el: '.swiper-pagination'
+      },
+
+      // 如果需要前进后退按钮
+      navigation: {
+        nextEl: '.swiper-button-next',
+        prevEl: '.swiper-button-prev'
+      },
+
+      // 如果需要滚动条
+      scrollbar: {
+        el: '.swiper-scrollbar'
+      }
+    })
+  }
 }
 </script>
 
