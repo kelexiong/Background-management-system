@@ -5,9 +5,19 @@ import VueRouter from 'vue-router'
 import Home from '@/pages/Home'
 import Login from '@/pages/Login'
 import Reigers from '@/pages/Reigers'
-import Search from '@/pages/Search'
+import Search from '@/pages/search'
 
 Vue.use(VueRouter)
+
+const originalPush = VueRouter.prototype.push
+const originalReplace = VueRouter.prototype.replace
+//修改原型对象中的push和replace方法
+VueRouter.prototype.push = function push(location) {
+  return originalPush.call(this, location).catch(err => err)
+}
+VueRouter.prototype.push = function replace(location) {
+  return originalReplace.call(this, location).catch(err => err)
+}
 
 const router = new VueRouter({
   routes: [
@@ -18,4 +28,8 @@ const router = new VueRouter({
     { path: '/search/:keyword?', component: Search, meta: { show: true }, name: 'search' }
   ]
 })
+// router.beforeEach((to, form, next) => {
+//   // console.log(to, form)
+//   next()
+// })
 export default router

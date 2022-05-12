@@ -34,7 +34,7 @@
           </router-link>
         </h1>
         <div class="searchArea">
-          <form action="###" class="searchForm">
+          <form action="###" class="searchForm" @submit.prevent="goSearch">
             <input type="text" id="autocomplete" class="input-error input-xxlarge" v-model="searchtext" />
             <button class="sui-btn btn-xlarge btn-danger" type="button" @click="goSearch">搜索</button>
           </form>
@@ -54,6 +54,7 @@ export default {
   },
   methods: {
     // 编程式导航
+
     goSearch() {
       // 字符串拼接写法
       // this.$router.push(`/search/${this.searchtext}`)
@@ -67,11 +68,19 @@ export default {
         name: 'search',
         params: { keyword: this.searchtext || undefined }
       }
+      console.log(path)
+      // debugger
       if (this.$route.query) {
         path.query = this.$route.query
       }
+      // console.log(path)
       this.$router.push(path)
     }
+  },
+  mounted() {
+    this.$bus.$on('clear', () => {
+      this.searchtext = undefined
+    })
   }
 }
 </script>

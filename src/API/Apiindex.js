@@ -17,3 +17,10 @@ export const reqGetFloor = () =>
     url: '/floor',
     method: 'GET'
   })
+// list搜索列表
+export const reqGetSearch = parms =>
+  requsets({
+    url: '/list',
+    method: 'POST',
+    data: parms
+  })

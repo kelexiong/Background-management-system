@@ -21,6 +21,7 @@ requsets.interceptors.response.use(
   res => {
     nprogress.start()
     nprogress.done()
+    // console.log(res)
     return res.data
   },
   error => {

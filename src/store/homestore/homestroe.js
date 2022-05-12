@@ -27,11 +27,11 @@ const mutations = {
   },
   GETLISTBANNER(state, data) {
     state.getlistbanner = data
-    console.log(data)
+    // console.log(data)
   },
   GETFLOORLIST(state, data) {
     state.getFloorlists = data
-    console.log(data)
+    // console.log(data)
   }
 }
 const getters = {}

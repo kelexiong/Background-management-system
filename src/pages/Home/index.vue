@@ -5,7 +5,7 @@
     <TodayRecommend></TodayRecommend>
     <Rank></Rank>
     <LikeThings></LikeThings>
-    <Floor v-for="(getfloor, index) in getfloorlist" :key="getfloor.id" :floorListData="getfloor"></Floor>
+    <Floor v-for="getfloor in getfloorlist" :key="getfloor.id" :floorListData="getfloor"></Floor>
     <Brand></Brand>
   </div>
 </template>

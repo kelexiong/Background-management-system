@@ -4,19 +4,7 @@
     <div class="sortList clearfix">
       <div class="center">
         <!--banner轮播-->
-        <div class="swiper-container" ref="mySwiper">
-          <div class="swiper-wrapper">
-            <div class="swiper-slide" v-for="(getbanners, index) in getlistbanner" :key="getbanners.id">
-              <img :src="getbanners.imgUrl" />
-            </div>
-          </div>
-          <!-- 如果需要分页器 -->
-          <div class="swiper-pagination"></div>
-
-          <!-- 如果需要导航按钮 -->
-          <div class="swiper-button-prev"></div>
-          <div class="swiper-button-next"></div>
-        </div>
+        <Carsoule :list="getlistbanner"></Carsoule>
       </div>
       <div class="right">
         <div class="news">
@@ -103,37 +91,39 @@ export default {
     ...mapState({
       getlistbanner: state => state.homestore.getlistbanner
     })
-  },
-  watch: {
-    getlistbanner: {
-      handler(nextval, oldval) {
-        this.$nextTick(() => {
-          var mySwiper = new Swiper(this.$refs.mySwiper, {
-            // direction: 'vertical', // 垂直切换选项
-            loop: true, // 循环模式选项
-            autoplay: {
-              delay: 2000 //1秒切换一次
-            },
-            // 如果需要分页器
-            pagination: {
-              el: '.swiper-pagination'
-            },
-
-            // 如果需要前进后退按钮
-            navigation: {
-              nextEl: '.swiper-button-next',
-              prevEl: '.swiper-button-prev'
-            },
-
-            // 如果需要滚动条
-            scrollbar: {
-              el: '.swiper-scrollbar'
-            }
-          })
-        })
-      }
-    }
   }
+  // watch: {
+  //   getlistbanner: {
+  //     handler(nextval, oldval) {
+  //       this.$nextTick(() => {
+  //         var mySwiper = new Swiper(this.$refs.mySwiper, {
+  //           // direction: 'vertical', // 垂直切换选项
+  //           loop: true, // 循环模式选项
+  //           autoplay: {
+  //             delay: 2000, //1秒切换一次
+  //             disableOnInteraction: false
+  //           },
+  //           // 如果需要分页器
+  //           pagination: {
+  //             el: '.swiper-pagination',
+  //             clickable: true
+  //           },
+
+  //           // 如果需要前进后退按钮
+  //           navigation: {
+  //             nextEl: '.swiper-button-next',
+  //             prevEl: '.swiper-button-prev'
+  //           },
+
+  //           // 如果需要滚动条
+  //           scrollbar: {
+  //             el: '.swiper-scrollbar'
+  //           }
+  //         })
+  //       })
+  //     }
+  //   }
+  // }
 }
 </script>
 
@@ -151,10 +141,15 @@ export default {
       width: 740px;
       height: 100%;
       padding: 5px;
+      box-sizing: border-box;
       float: left;
-      img {
+      div {
         width: 100%;
         height: 100%;
+        img {
+          width: 100%;
+          height: 100%;
+        }
       }
     }
 
