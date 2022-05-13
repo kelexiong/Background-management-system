@@ -68,7 +68,7 @@ export default {
         name: 'search',
         params: { keyword: this.searchtext || undefined }
       }
-      console.log(path)
+      // console.log(path)
       // debugger
       if (this.$route.query) {
         path.query = this.$route.query

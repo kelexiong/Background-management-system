@@ -11,7 +11,7 @@
 <script>
 import HeardSeac from './components/head/HeardSeac.vue'
 import FooterDetails from './components/footer/FooterDetails.vue'
-import store from 'vuex'
+
 export default {
   name: 'App',
   components: {

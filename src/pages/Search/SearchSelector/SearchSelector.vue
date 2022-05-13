@@ -33,7 +33,7 @@
       <div class="fl key">{{ attrs.attrName }}</div>
       <div class="fl value">
         <ul class="type-list">
-          <li v-for="(attrvalue, index) in attrs.attrValueList" :key="index">
+          <li v-for="(attrvalue, index) in attrs.attrValueList" :key="index" @click="getattrs(attrvalue, attrs)">
             <a>{{ attrvalue }}</a>
           </li>
         </ul>
@@ -139,6 +139,9 @@ export default {
   methods: {
     addTrademark(data) {
       this.$emit('addtradlist', data)
+    },
+    getattrs(val, attrs) {
+      this.$emit('getattrsInfo', val, attrs)
     }
   }
 }
