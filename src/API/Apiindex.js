@@ -24,3 +24,9 @@ export const reqGetSearch = parms =>
     method: 'POST',
     data: parms
   })
+// 商品详情接口
+export const reqGoodsInfo = skuId =>
+  requsets({
+    url: `/item/${skuId}`,
+    method: 'GET'
+  })

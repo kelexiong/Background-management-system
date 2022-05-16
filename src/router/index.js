@@ -6,6 +6,7 @@ import Home from '@/pages/Home'
 import Login from '@/pages/Login'
 import Reigers from '@/pages/Reigers'
 import Search from '@/pages/search'
+import Detail from '@/pages/Detail'
 
 Vue.use(VueRouter)
 
@@ -25,8 +26,14 @@ const router = new VueRouter({
     { path: '/home', component: Home, meta: { show: true } },
     { path: '/login', component: Login },
     { path: '/reigers', component: Reigers },
-    { path: '/search/:keyword?', component: Search, meta: { show: true }, name: 'search' }
-  ]
+    { path: '/search/:keyword?', component: Search, meta: { show: true }, name: 'search' },
+    { path: '/detail/:goodsid', component: Detail, meta: { show: true } }
+  ],
+  scrollBehavior(to, from, savedPosition) {
+    if (to.path.indexOf('/detail') !== -1) {
+      return { y: 0 }
+    }
+  }
 })
 // router.beforeEach((to, form, next) => {
 //   // console.log(to, form)

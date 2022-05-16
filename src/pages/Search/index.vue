@@ -49,7 +49,7 @@
               <li class="yui3-u-1-5" v-for="goods in goodsList" :key="goods.id">
                 <div class="list-wrap">
                   <div class="p-img">
-                    <a href="item.html" target="_blank"><img :src="goods.defaultImg" /></a>
+                    <router-link :to="`/detail/${goods.id}`"><img :src="goods.defaultImg" /></router-link>
                   </div>
                   <div class="price">
                     <strong>
@@ -72,7 +72,7 @@
             </ul>
           </div>
           <!-- 分页器 -->
-          <Pagination></Pagination>
+          <Pagination :pageNo="searchParams.pageNo" :pageSize="searchParams.pageSize" :tato="total" :lianXpage="5" @newpage="newpage"></Pagination>
         </div>
       </div>
     </div>
@@ -81,7 +81,7 @@
 
 <script>
 import SearchSelector from './SearchSelector/SearchSelector'
-import { mapGetters } from 'vuex'
+import { mapGetters, mapState } from 'vuex'
 export default {
   name: 'Search',
   data() {
@@ -96,7 +96,7 @@ export default {
         trademark: '',
         order: '1:asc',
         pageNo: 1,
-        pageSize: 10
+        pageSize: 3
       }
     }
   },
@@ -122,7 +122,10 @@ export default {
         return 'icon-down'
       }
       return 'icon-up'
-    }
+    },
+    ...mapState({
+      total: state => state.searchstore.search.total
+    })
   },
   methods: {
     getData() {
@@ -188,6 +191,11 @@ export default {
         newOrder = `${flg}:asc`
         this.searchParams.order = newOrder
       }
+      this.getData()
+    },
+    // 分页的跳转
+    newpage(data) {
+      this.searchParams.pageNo = data
       this.getData()
     }
   },
