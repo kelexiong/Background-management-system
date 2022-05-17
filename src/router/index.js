@@ -7,6 +7,8 @@ import Login from '@/pages/Login'
 import Reigers from '@/pages/Reigers'
 import Search from '@/pages/search'
 import Detail from '@/pages/Detail'
+import AddcartSucces from '@/pages/AddCartSuccess'
+import ShopCart from '@/pages/ShopCart'
 
 Vue.use(VueRouter)
 
@@ -16,7 +18,7 @@ const originalReplace = VueRouter.prototype.replace
 VueRouter.prototype.push = function push(location) {
   return originalPush.call(this, location).catch(err => err)
 }
-VueRouter.prototype.push = function replace(location) {
+VueRouter.prototype.replace = function replace(location) {
   return originalReplace.call(this, location).catch(err => err)
 }
 
@@ -27,7 +29,9 @@ const router = new VueRouter({
     { path: '/login', component: Login },
     { path: '/reigers', component: Reigers },
     { path: '/search/:keyword?', component: Search, meta: { show: true }, name: 'search' },
-    { path: '/detail/:goodsid', component: Detail, meta: { show: true } }
+    { path: '/detail/:goodsid', component: Detail, meta: { show: true } },
+    { path: '/addshopcart', component: AddcartSucces, meta: { show: true }, name: 'addshopcart' },
+    { path: '/ShopCart', component: ShopCart, meta: { show: true }, name: 'ShopCart' }
   ],
   scrollBehavior(to, from, savedPosition) {
     if (to.path.indexOf('/detail') !== -1) {

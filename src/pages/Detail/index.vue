@@ -84,7 +84,7 @@
                 <a href="javascript:" :disabled="goodsNum >= 1" class="mins" @click="goodsNum > 1 ? goodsNum-- : (goodsNum = 1)">-</a>
               </div>
               <div class="add">
-                <a href="javascript:">加入购物车</a>
+                <a @click="addShoppingCart">加入购物车</a>
               </div>
             </div>
           </div>
@@ -345,7 +345,7 @@ export default {
   },
   mounted() {
     // this.GoodsInfo(2152)
-    console.log(this.skuInfo)
+
     this.$store.dispatch('getgoodsinfo', this.$route.params.goodsid)
   },
   computed: {
@@ -365,7 +365,21 @@ export default {
       if (this.goodsNum > 99) this.goodsNum = 99
       if (this.goodsNum <= 1) this.goodsNum = 1
       this.goodsNum = parseInt(this.goodsNum)
-      console.log(typeof this.goodsNum)
+    },
+    async addShoppingCart() {
+      let skuNum = this.goodsNum
+      let skuId = this.$route.params.goodsid
+      // console.log(skuNum)
+      try {
+        await this.$store.dispatch('addshoppingcart', { skuId, skuNum })
+        //  测试代码-----------------------注意要删掉
+        let skuInfo = { a: 123, b: 213, id: 21 }
+
+        sessionStorage.setItem('skuInfo', JSON.stringify(skuInfo))
+        this.$router.push({ name: 'addshopcart', query: { skuNum } })
+      } catch (error) {
+        alert(error.message)
+      }
     }
   }
 }

@@ -1,3 +1,4 @@
+import store from '@/store'
 import axios from 'axios'
 // 导入进度条
 import nprogress from 'nprogress'
@@ -14,12 +15,15 @@ const requsets = axios.create({
 })
 // 设置请求拦截器
 requsets.interceptors.request.use(config => {
+  if (store.state.detail.uuidToken) {
+    config.headers.userTempId = store.state.detail.uuidToken
+  }
+  nprogress.start()
   return config
 })
 // 设置响应拦截器
 requsets.interceptors.response.use(
   res => {
-    nprogress.start()
     nprogress.done()
     // console.log(res)
     return res.data

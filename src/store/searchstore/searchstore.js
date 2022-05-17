@@ -7,7 +7,6 @@ const state = {
 const actions = {
   async getsearchlist({ commit }, data = {}) {
     let result = await reqGetSearch(data)
-    console.log(result)
     if (result.code === 200) {
       commit('GETSEARCJLIST', result.data)
     }

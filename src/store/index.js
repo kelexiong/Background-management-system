@@ -8,10 +8,13 @@ import homestore from './homestore/homestroe'
 import searchstore from './searchstore/searchstore'
 // 导入detail小仓库
 import detail from './detailstore/detail'
+// 导入购物车的小仓库
+import shoppingcart from './shoppingcart/shoppingcart'
 export default new Vuex.Store({
   modules: {
     homestore,
     searchstore,
-    detail
+    detail,
+    shoppingcart
   }
 })

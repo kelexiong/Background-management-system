@@ -30,3 +30,14 @@ export const reqGoodsInfo = skuId =>
     url: `/item/${skuId}`,
     method: 'GET'
   })
+// 添加/api/cart/addToCart/{ skuId }/{ skuNum }
+export const reqShoppingCart = ({ skuId, skuNum }) =>
+  requsets({
+    url: `/cart/addToCart/${skuId}/${skuNum}`,
+    method: 'POST'
+  })
+export const reqGetShopCart = () =>
+  requsets({
+    url: 'cart/cartList',
+    method: 'GET'
+  })
