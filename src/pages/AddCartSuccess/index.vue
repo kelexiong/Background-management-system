@@ -5,11 +5,16 @@
       <div class="goods">
         <div class="left-good">
           <div class="left-pic">
-            <img src="good.skuDefaultImg" />
+            <img :src="skuInfo.skuDefaultImg" />
           </div>
           <div class="right-info">
-            <p class="title">{{ skuInfo }}</p>
-            <p class="attr">颜色：WFZ5099IH/5L钛金釜内胆 数量：2</p>
+            <p class="title">{{ skuInfo.skuName }}</p>
+            <p class="attr">{{ skuInfo.skuDesc }} 数量：{{ $route.query.skuNum }}</p>
+            <p class="attr">
+              <span v-for="item in xuanzebanben" :key="item.baseSaleAttrId"
+                >{{ item.saleAttrName }}：{{ item.spuSaleAttrValueList[0].saleAttrValueName }}</span
+              >
+            </p>
           </div>
         </div>
         <div class="right-gocart">
@@ -26,19 +31,30 @@ export default {
   name: 'AddCartSuccess',
   data() {
     return {
-      goodscartid: ''
+      goodscartid: '',
+      goodsInfo: {}
     }
   },
   computed: {
     skuInfo() {
-      return JSON.parse(sessionStorage.getItem('skuInfo'))
+      let { skuInfo } = JSON.parse(sessionStorage.getItem('skuInfo'))
+      return skuInfo
+    },
+    xuanzebanben() {
+      let { xuanzebanben } = JSON.parse(sessionStorage.getItem('skuInfo'))
+      xuanzebanben.forEach(item => {
+        item.spuSaleAttrValueList = item.spuSaleAttrValueList.filter(items => {
+          if (items.isChecked == 1) return items
+        })
+      })
+      return xuanzebanben
     }
   },
   mounted() {
     this.$store.dispatch('getshopcartlist', this.$route.params.goods)
-    console.log(this.$route)
     // this.goodscartid=this.$route
-  }
+  },
+  methods: {}
 }
 </script>
 

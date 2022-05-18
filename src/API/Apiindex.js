@@ -41,3 +41,15 @@ export const reqGetShopCart = () =>
     url: 'cart/cartList',
     method: 'GET'
   })
+// 修改商品/api/cart/checkCart/{skuID}/{isChecked}
+export const reqCheckCart = ({ skuId, isChecked }) =>
+  requsets({
+    url: `/cart/checkCart/${skuId}/${isChecked}`,
+    method: 'GET'
+  })
+// 删除商品接口/api/cart/deleteCart/{skuId}
+export const reqdeleteCart = skuId =>
+  requsets({
+    url: `/cart/deleteCart/${skuId}`,
+    method: 'DELETE'
+  })

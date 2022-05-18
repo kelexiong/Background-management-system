@@ -373,9 +373,9 @@ export default {
       try {
         await this.$store.dispatch('addshoppingcart', { skuId, skuNum })
         //  测试代码-----------------------注意要删掉
-        let skuInfo = { a: 123, b: 213, id: 21 }
-
-        sessionStorage.setItem('skuInfo', JSON.stringify(skuInfo))
+        // let skuInfo = { a: 123, b: 213, id: 21 }
+        let obj = { skuInfo: this.skuInfo, xuanzebanben: this.spuSaleAttrList }
+        sessionStorage.setItem('skuInfo', JSON.stringify(obj))
         this.$router.push({ name: 'addshopcart', query: { skuNum } })
       } catch (error) {
         alert(error.message)
