@@ -128,7 +128,7 @@ export default {
         this.flg = false
         try {
           this.$store.dispatch('changescheckcart', { skuId, isChecked })
-        } catch {
+        } catch (error) {
           this.flg = true
         }
       }
@@ -169,7 +169,7 @@ export default {
         setTimeout(() => {
           this.getDate()
         }, 300)
-      } catch {
+      } catch (error) {
         alert(error.message)
       }
     }

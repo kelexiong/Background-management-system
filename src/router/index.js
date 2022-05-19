@@ -4,7 +4,7 @@ import VueRouter from 'vue-router'
 // 引入组件
 import Home from '@/pages/Home'
 import Login from '@/pages/Login'
-import Reigers from '@/pages/Reigers'
+import Register from '@/pages/Register'
 import Search from '@/pages/search'
 import Detail from '@/pages/Detail'
 import AddcartSucces from '@/pages/AddCartSuccess'
@@ -27,7 +27,7 @@ const router = new VueRouter({
     { path: '/', component: Home },
     { path: '/home', component: Home, meta: { show: true } },
     { path: '/login', component: Login },
-    { path: '/reigers', component: Reigers },
+    { path: '/register', component: Register },
     { path: '/search/:keyword?', component: Search, meta: { show: true }, name: 'search' },
     { path: '/detail/:goodsid', component: Detail, meta: { show: true } },
     { path: '/addshopcart', component: AddcartSucces, meta: { show: true }, name: 'addshopcart' },

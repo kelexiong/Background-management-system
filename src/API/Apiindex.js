@@ -53,3 +53,29 @@ export const reqdeleteCart = skuId =>
     url: `/cart/deleteCart/${skuId}`,
     method: 'DELETE'
   })
+// 获取验证码/user/passport/sendCode/phone
+export const reqgetvalidation = phone =>
+  requsets({
+    url: `/user/passport/sendCode/${phone}`,
+    method: 'GET'
+  })
+// 注册用户/api/user/passport/register
+export const reqregistereduser = data =>
+  requsets({
+    url: `/user/passport/register`,
+    method: 'POST',
+    data
+  })
+// 用户登录/api/user/passport/login
+export const requserlogin = data =>
+  requsets({
+    url: '/user/passport/login',
+    method: 'POST',
+    data
+  })
+// 校验token api/user/passport/auth/getUserInfo
+export const reqgetUserInfo = () =>
+  requsets({
+    url: '/user/passport/auth/getUserInfo',
+    method: 'GET'
+  })

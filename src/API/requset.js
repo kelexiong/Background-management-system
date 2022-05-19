@@ -18,6 +18,7 @@ requsets.interceptors.request.use(config => {
   if (store.state.detail.uuidToken) {
     config.headers.userTempId = store.state.detail.uuidToken
   }
+  if (store.state.userInfo.token) config.headers.token = store.state.userInfo.token
   nprogress.start()
   return config
 })

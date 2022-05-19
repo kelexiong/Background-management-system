@@ -6,12 +6,16 @@
         <div class="container">
           <div class="loginList">
             <p>尚品汇欢迎您！</p>
-            <p>
+            <p v-if="!usernames">
               <span>请</span>
               <!-- <a href="###">登录</a> -->
               <router-link to="/login">登录</router-link>
               <!-- <a href="###" class="register">免费注册</a> -->
-              <router-link to="/reigers" class="register">免费注册</router-link>
+              <router-link to="/register" class="register">免费注册</router-link>
+            </p>
+            <p v-else>
+              <span>{{ usernames }} </span>
+              <a class="register" @click="exituser"> 退出登录</a>
             </p>
           </div>
           <div class="typeList">
@@ -49,12 +53,12 @@ export default {
   name: 'HeardSeac',
   data() {
     return {
-      searchtext: ''
+      searchtext: '',
+      username: ''
     }
   },
   methods: {
     // 编程式导航
-
     goSearch() {
       // 字符串拼接写法
       // this.$router.push(`/search/${this.searchtext}`)
@@ -75,12 +79,25 @@ export default {
       }
       // console.log(path)
       this.$router.push(path)
+    },
+    exituser() {
+      localStorage.removeItem('token')
+      sessionStorage.removeItem('username')
+      this.username = ''
+      this.$router.push('/login')
     }
   },
   mounted() {
     this.$bus.$on('clear', () => {
       this.searchtext = undefined
     })
+    // 获取用户数据
+    // this.$store.dispatch('getuserinfo')
+  },
+  computed: {
+    usernames() {
+      return this.$store.state.userInfo.username
+    }
   }
 }
 </script>
@@ -108,6 +125,12 @@ export default {
             border-left: 1px solid #b3aeae;
             padding: 0 5px;
             margin-left: 5px;
+          }
+          a {
+            cursor: pointer;
+          }
+          a:hover {
+            text-decoration: underline;
           }
         }
       }

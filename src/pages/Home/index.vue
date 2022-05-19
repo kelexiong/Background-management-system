@@ -29,7 +29,10 @@ export default {
     Brand
   },
   mounted() {
+    // 获取脚步数据
     this.$store.dispatch('getFloorList')
+    // // 获取用户数据
+    this.$store.dispatch('getuserinfo')
   },
   computed: {
     ...mapState({
