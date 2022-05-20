@@ -79,3 +79,21 @@ export const reqgetUserInfo = () =>
     url: '/user/passport/auth/getUserInfo',
     method: 'GET'
   })
+// 退出用户  /user/passport/logout
+export const reqExitUserInfo = () =>
+  requsets({
+    url: '/user/passport/logout',
+    method: 'GET'
+  })
+// 获取购物车结算 /order/auth/trade
+export const reqtradeInfo = () =>
+  requsets({
+    url: '/order/auth/trade',
+    method: 'GET'
+  })
+// 用户地址user/userAddress/auth/findUserAddressList  methood:get
+export const requserAddress = () =>
+  requsets({
+    url: '/user/userAddress/auth/findUserAddressList',
+    method: 'GET'
+  })

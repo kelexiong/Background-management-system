@@ -12,12 +12,15 @@ import detail from './detailstore/detail'
 import shoppingcart from './shoppingcart/shoppingcart'
 // 用户信息的仓库
 import userInfo from './userInfo/userInfo'
+// 结算仓库
+import trade from './trade/trade'
 export default new Vuex.Store({
   modules: {
     homestore,
     searchstore,
     detail,
     shoppingcart,
-    userInfo
+    userInfo,
+    trade
   }
 })

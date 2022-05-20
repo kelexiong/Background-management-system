@@ -80,11 +80,13 @@ export default {
       // console.log(path)
       this.$router.push(path)
     },
-    exituser() {
-      localStorage.removeItem('token')
-      sessionStorage.removeItem('username')
-      this.username = ''
-      this.$router.push('/login')
+    async exituser() {
+      try {
+        await this.$store.dispatch('exituserinfo')
+        this.$router.push('/home')
+      } catch (error) {
+        alert(error)
+      }
     }
   },
   mounted() {

@@ -9,7 +9,9 @@ import Search from '@/pages/search'
 import Detail from '@/pages/Detail'
 import AddcartSucces from '@/pages/AddCartSuccess'
 import ShopCart from '@/pages/ShopCart'
-
+import Trade from '@/pages/Trade'
+// 导入仓库
+import store from '@/store/index'
 Vue.use(VueRouter)
 
 const originalPush = VueRouter.prototype.push
@@ -31,7 +33,8 @@ const router = new VueRouter({
     { path: '/search/:keyword?', component: Search, meta: { show: true }, name: 'search' },
     { path: '/detail/:goodsid', component: Detail, meta: { show: true } },
     { path: '/addshopcart', component: AddcartSucces, meta: { show: true }, name: 'addshopcart' },
-    { path: '/ShopCart', component: ShopCart, meta: { show: true }, name: 'ShopCart' }
+    { path: '/ShopCart', component: ShopCart, meta: { show: true }, name: 'ShopCart' },
+    { path: '/Trade', component: Trade }
   ],
   scrollBehavior(to, from, savedPosition) {
     if (to.path.indexOf('/detail') !== -1) {
@@ -39,8 +42,21 @@ const router = new VueRouter({
     }
   }
 })
-// router.beforeEach((to, form, next) => {
-//   // console.log(to, form)
-//   next()
-// })
+router.beforeEach((to, form, next) => {
+  // 只有登录了才有token
+  if (localStorage.getItem('token')) {
+    if (store.state.userInfo.username) {
+      if (to.path === '/login') {
+        next('/home')
+      }
+      next()
+    } else {
+      store.dispatch('getuserinfo')
+      next()
+    }
+  } else {
+    if (to.path === '/Trade') next(false)
+    else next()
+  }
+})
 export default router

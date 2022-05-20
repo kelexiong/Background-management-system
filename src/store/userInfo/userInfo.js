@@ -1,7 +1,7 @@
-import { reqgetvalidation, reqregistereduser, requserlogin, reqgetUserInfo } from '@/API/Apiindex'
+import { reqgetvalidation, reqregistereduser, requserlogin, reqgetUserInfo, reqExitUserInfo } from '@/API/Apiindex'
 const state = {
   code: '',
-  token: '',
+  token: localStorage.getItem('token'),
   username: ''
 }
 const actions = {
@@ -14,7 +14,6 @@ const actions = {
   },
   async sendregistered({ commit }, data) {
     let result = await reqregistereduser(data)
-
     if (result.code === 200) {
       return '注册成功ok,前往登录'
     } else return Promise.reject(new Error(result.message))
@@ -24,7 +23,7 @@ const actions = {
     let result = await requserlogin(data)
     if (result.code === 200) {
       commit('LOGINUSERACCOUNT', result.data)
-      sessionStorage.setItem('token', result.data.token)
+      localStorage.setItem('token', result.data.token)
       return 'ok'
     } else return Promise.reject(new Error(result.message))
   },
@@ -33,6 +32,14 @@ const actions = {
     let result = await reqgetUserInfo()
     if (result.code === 200) {
       commit('GETUSERINFO', result.data)
+      return 'ok'
+    } else return Promise.reject(new Error(result.message))
+  },
+  // 退出
+  async exituserinfo({ commit }) {
+    let result = await reqExitUserInfo()
+    if (result.code === 200) {
+      commit('EXITUSERINFO')
       return 'ok'
     } else return Promise.reject(new Error(result.message))
   }
@@ -46,7 +53,14 @@ const mutations = {
     state.token = data.token
     // sessionStorage.setItem('username', state.username)
   },
-  GETUSERINFO(state, data) {}
+  GETUSERINFO(state, data) {
+    data.nickName ? (state.username = data.nickName) : (state.username = data.name)
+  },
+  EXITUSERINFO(state) {
+    state.token = ''
+    state.username = ''
+    localStorage.removeItem('token')
+  }
 }
 const getters = {}
 export default { state, actions, mutations, getters }
