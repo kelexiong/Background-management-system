@@ -11,22 +11,7 @@
           <span class="s3" v-if="address.isDefault === '1'">默认地址</span>
         </p>
       </div>
-      <!-- <div class="address clearFix">
-        <span class="username selected">李四</span>
-        <p>
-          <span class="s1">北京市昌平区宏福科技园综合楼6层</span>
-          <span class="s2">13590909098</span>
-          <span class="s3">默认地址</span>
-        </p>
-      </div>
-      <div class="address clearFix">
-        <span class="username selected">王五</span>
-        <p>
-          <span class="s1">北京市昌平区宏福科技园综合楼6层</span>
-          <span class="s2">18012340987</span>
-          <span class="s3">默认地址</span>
-        </p>
-      </div> -->
+
       <div class="line"></div>
       <h5 class="pay">支付方式</h5>
       <div class="address clearFix">
@@ -61,7 +46,7 @@
       </div>
       <div class="bbs">
         <h5>买家留言：</h5>
-        <textarea placeholder="建议留言前先与商家沟通确认" class="remarks-cont"></textarea>
+        <textarea placeholder="建议留言前先与商家沟通确认" class="remarks-cont" v-model="remarks"></textarea>
       </div>
       <div class="line"></div>
       <div class="bill">
@@ -101,7 +86,7 @@
       </div>
     </div>
     <div class="sub clearFix">
-      <router-link class="subBtn" to="/pay">提交订单</router-link>
+      <a class="subBtn" @click="submit">提交订单</a>
     </div>
   </div>
 </template>
@@ -110,10 +95,15 @@
 import { mapGetters, mapState } from 'vuex'
 export default {
   name: 'Trade',
+  data() {
+    return {
+      remarks: ''
+    }
+  },
   mounted() {
     try {
       this.$store.dispatch('gettradeinfo')
-      this.$store.dispatch('getuseraddress')
+      this.getData()
     } catch (error) {
       alert(error)
     }
@@ -142,11 +132,31 @@ export default {
     }
   },
   methods: {
+    async getData() {
+      await this.$store.dispatch('getuseraddress')
+    },
     changeAddress(id) {
       this.$store.state.trade.address.forEach(item => {
         item.isDefault = '0'
         if (item.id === id) item.isDefault = '1'
       })
+    },
+    async submit() {
+      let tradeNo = this.$store.state.trade.detailList.tradeNo
+      let data = {
+        consignee: this.recipientsData.consignee || '',
+        consigneeTel: this.recipientsData.phoneNum || '',
+        deliveryAddress: this.recipientsData.fullAddress || '',
+        paymentWay: 'ONLINE',
+        orderComment: this.remarks,
+        orderDetailList: this.detailArrayList
+      }
+      let result = await this.$API.reqsubmitOrder(tradeNo, data)
+      if (result.code === 200) {
+        this.$router.push('/Pay?orderId=' + result.data)
+      } else {
+        return Promise.reject(new Error(result.message))
+      }
     }
   }
 }

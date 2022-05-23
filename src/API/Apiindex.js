@@ -97,3 +97,28 @@ export const requserAddress = () =>
     url: '/user/userAddress/auth/findUserAddressList',
     method: 'GET'
   })
+// 提交订单/api/order/auth/submitOrder?tradeNo={tradeNo}   POST
+export const reqsubmitOrder = (tradeNo, data) =>
+  requsets({
+    url: `/order/auth/submitOrder?tradeNo=${tradeNo}`,
+    method: 'POST',
+    data
+  })
+// 获取订单信息/api/payment/weixin/createNative/{orderId} GET
+export const reqcreateNative = orderId =>
+  requsets({
+    url: `/payment/weixin/createNative/${orderId}`,
+    method: 'GET'
+  })
+// 获取支付状态/api/payment/weixin/queryPayStatus/{orderId} GET
+export const reqqueryPayStatus = orderId =>
+  requsets({
+    url: `/payment/weixin/queryPayStatus/${orderId}`,
+    method: 'GET'
+  })
+// 获取我的订单列表/api/order/auth/{page}/{limit} GET
+export const reqMyOrederList = (page, limit) =>
+  requsets({
+    url: `/order/auth/${page}/${limit}`,
+    method: 'GET'
+  })

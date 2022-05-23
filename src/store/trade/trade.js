@@ -16,7 +16,6 @@ const actions = {
     if (result.code === 200) {
       commit('GETUSERADDRESS', result.data)
     }
-    console.log(result)
   }
 }
 const mutations = {

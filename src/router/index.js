@@ -10,6 +10,11 @@ import Detail from '@/pages/Detail'
 import AddcartSucces from '@/pages/AddCartSuccess'
 import ShopCart from '@/pages/ShopCart'
 import Trade from '@/pages/Trade'
+import Pay from '@/pages/Pay'
+import PaySiccess from '@/pages/PaySuccess'
+import Center from '@/pages/Center'
+import centerMyoder from '@/pages/Center/centerMyoder'
+import centerGroupshop from '@/pages/Center/centerGroupshop'
 // 导入仓库
 import store from '@/store/index'
 Vue.use(VueRouter)
@@ -26,19 +31,88 @@ VueRouter.prototype.replace = function replace(location) {
 
 const router = new VueRouter({
   routes: [
-    { path: '/', component: Home },
-    { path: '/home', component: Home, meta: { show: true } },
-    { path: '/login', component: Login },
-    { path: '/register', component: Register },
-    { path: '/search/:keyword?', component: Search, meta: { show: true }, name: 'search' },
-    { path: '/detail/:goodsid', component: Detail, meta: { show: true } },
-    { path: '/addshopcart', component: AddcartSucces, meta: { show: true }, name: 'addshopcart' },
-    { path: '/ShopCart', component: ShopCart, meta: { show: true }, name: 'ShopCart' },
-    { path: '/Trade', component: Trade }
+    {
+      path: '/',
+      component: Home
+    },
+    {
+      path: '/home',
+      component: Home,
+      meta: {
+        show: true
+      }
+    },
+    {
+      path: '/login',
+      component: Login
+    },
+    {
+      path: '/register',
+      component: Register
+    },
+    {
+      path: '/search/:keyword?',
+      component: Search,
+      meta: {
+        show: true
+      },
+      name: 'search'
+    },
+    {
+      path: '/detail/:goodsid',
+      component: Detail,
+      meta: {
+        show: true
+      }
+    },
+    {
+      path: '/addshopcart',
+      component: AddcartSucces,
+      meta: {
+        show: true
+      },
+      name: 'addshopcart'
+    },
+    {
+      path: '/ShopCart',
+      component: ShopCart,
+      meta: {
+        show: true
+      },
+      name: 'ShopCart'
+    },
+    {
+      path: '/Trade',
+      component: Trade
+    },
+    {
+      path: '/Pay',
+      component: Pay
+    },
+    {
+      path: '/PaySiccess',
+      component: PaySiccess
+    },
+    {
+      path: '/center',
+      component: Center,
+      children: [
+        {
+          path: '',
+          component: centerMyoder
+        },
+        {
+          path: 'centerGroupshop',
+          component: centerGroupshop
+        }
+      ]
+    }
   ],
   scrollBehavior(to, from, savedPosition) {
     if (to.path.indexOf('/detail') !== -1) {
-      return { y: 0 }
+      return {
+        y: 0
+      }
     }
   }
 })
