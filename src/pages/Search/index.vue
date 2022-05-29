@@ -14,7 +14,9 @@
             <li class="with-x" v-if="searchParams.categoryName">{{ searchParams.categoryName }}<i @click="removeCategoryName">×</i></li>
             <li class="with-x" v-if="searchParams.keyword">{{ searchParams.keyword }}<i @click="removeKeyword">×</i></li>
             <li class="with-x" v-if="searchParams.trademark">{{ searchParams.trademark.split(':')[1] }}<i @click="removeTrademark">×</i></li>
-            <li class="with-x" v-for="(attrslist, index) in searchParams.props" :key="index">{{ attrslist.split(':')[1] }}<i @click="removeAttrs(index)">×</i></li>
+            <li class="with-x" v-for="(attrslist, index) in searchParams.props" :key="index">
+              {{ attrslist.split(':')[1] }}<i @click="removeAttrs(index)">×</i>
+            </li>
           </ul>
         </div>
         <!--selector品牌子组件-->
@@ -49,7 +51,7 @@
               <li class="yui3-u-1-5" v-for="goods in goodsList" :key="goods.id">
                 <div class="list-wrap">
                   <div class="p-img">
-                    <router-link :to="`/detail/${goods.id}`"><img :src="goods.defaultImg" /></router-link>
+                    <router-link :to="`/detail/${goods.id}`"><img v-lazy="goods.defaultImg" /></router-link>
                   </div>
                   <div class="price">
                     <strong>
@@ -58,7 +60,9 @@
                     </strong>
                   </div>
                   <div class="attr">
-                    <a target="_blank" href="item.html" title="促销信息，下单即赠送三个月CIBN视频会员卡！【小米电视新品4A 58 火爆预约中】">{{ goods.title }}</a>
+                    <a target="_blank" href="item.html" title="促销信息，下单即赠送三个月CIBN视频会员卡！【小米电视新品4A 58 火爆预约中】">{{
+                      goods.title
+                    }}</a>
                   </div>
                   <div class="commit">
                     <i class="command">已有<span>2000</span>人评价</i>

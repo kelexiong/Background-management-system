@@ -19,6 +19,15 @@ import store from './store/index'
 import * as API from '@/API/Apiindex'
 // 引入UI组件库
 import { MessageBox } from 'element-ui'
+// 图片懒加载
+import VueLazyload from 'vue-lazyload'
+import xiao from '@/assets/123.gif'
+// 引入表单验证插件
+import '@/plugin/validate'
+Vue.use(VueLazyload, {
+  error: xiao,
+  loading: xiao
+})
 // 注册全局组件---三级联动
 Vue.component(ThreeLinkage.name, ThreeLinkage)
 // 注册全局组件---轮播图
