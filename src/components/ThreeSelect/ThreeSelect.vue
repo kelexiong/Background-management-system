@@ -2,7 +2,11 @@
   <el-card class="box-card">
     <el-form :inline="true" :model="formInline" class="demo-form-inline">
       <el-form-item label="一级联动">
-        <el-select v-model="formInline.category1Id" placeholder="请选择">
+        <el-select
+          v-model="formInline.category1Id"
+          :disabled="!isshowTabe"
+          placeholder="请选择"
+        >
           <el-option
             v-for="item in LevelOneData"
             :key="item.id"
@@ -12,7 +16,11 @@
         </el-select>
       </el-form-item>
       <el-form-item label="二级联动">
-        <el-select v-model="formInline.category2Id" placeholder="请选择">
+        <el-select
+          v-model="formInline.category2Id"
+          :disabled="!isshowTabe"
+          placeholder="请选择"
+        >
           <el-option
             v-for="item2 in LevelTowData"
             :key="item2.id"
@@ -24,6 +32,7 @@
       <el-form-item label="三级联动">
         <el-select
           v-model="formInline.category3Id"
+          :disabled="!isshowTabe"
           placeholder="请选择"
           @change="getData"
         >
@@ -55,6 +64,7 @@ export default {
       levelThreeData: [],
     };
   },
+  props: ["isshowTabe"],
   mounted() {
     this.getLevelOne();
   },
@@ -75,7 +85,7 @@ export default {
       } else {
         this.$message.error("网络出错");
       }
-      this.$emit("showData", []);
+      this.$emit("showData", { c1Id: this.formInline.category1Id });
     },
     async getLevelThree(id) {
       let result = await this.$API.magtow.levelThree(id);
@@ -84,18 +94,10 @@ export default {
       } else {
         this.$message.error("网络出错");
       }
-      this.$emit("showData", []);
+      this.$emit("showData", { c2Id: this.formInline.category2Id });
     },
     async getData() {
-      let result = await this.$API.magtow.getAttributeData(this.formInline);
-      if (result.code === 200) {
-        this.$emit("showData", {
-          data: result.data,
-          id: this.formInline.category3Id,
-        });
-      } else {
-        this.$message.error("展示数据出错了");
-      }
+      this.$emit("showData", { c3Id: this.formInline.category3Id });
     },
   },
 

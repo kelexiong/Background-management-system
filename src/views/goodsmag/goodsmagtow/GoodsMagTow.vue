@@ -1,12 +1,12 @@
 <template>
   <div>
-    <ThreeSelect @showData="showList"></ThreeSelect>
+    <ThreeSelect @showData="showList" :isshowTabe="isshowTabe"></ThreeSelect>
     <el-card class="box-card">
       <div v-show="isshowTabe">
         <el-button
           type="primary"
           icon="el-icon-edit"
-          :disabled="tableData.length === 0"
+          :disabled="formInline.category3Id === '' && tableData.length === 0"
           @click="addAttr"
           >添加属性</el-button
         >
@@ -42,12 +42,18 @@
                     size="mini"
                     @click="alterAttr(row)"
                   ></el-button>
-                  <el-button
-                    type="danger"
-                    icon="el-icon-delete"
-                    circle
-                    size="mini"
-                  ></el-button>
+                  <el-popconfirm
+                    :title="`确定要删除${row.attrName}吗？`"
+                    @onConfirm="deletAttribute(row)"
+                  >
+                    <el-button
+                      type="danger"
+                      icon="el-icon-delete"
+                      circle
+                      size="mini"
+                      slot="reference"
+                    ></el-button>
+                  </el-popconfirm>
                 </el-row>
               </template>
             </el-table-column>
@@ -66,13 +72,14 @@
               v-model="addOrAlter.attrName"
               placeholder="请输入属性名"
               style="width: 40%"
+              @input="isButtonNot"
             ></el-input>
           </el-form-item>
           <el-form-item>
             <el-button
               type="primary"
               @click="addAttrValueList"
-              :disabled="addOrAlter.attrName === ''"
+              :disabled="isAddAttr"
               >添加属性</el-button
             >
             <el-button @click="isshowTabe = true">取消</el-button>
@@ -92,27 +99,29 @@
                 >
                 </el-table-column>
                 <el-table-column prop="name" label="属性值名称" width="width">
-                  <template slot-scope="{ row }">
+                  <template slot-scope="{ row, $index }">
                     <el-input
                       v-model="row.valueName"
                       placeholder="请输入属性值"
                       size="mini"
                       v-if="row.flag"
-                      @blur="viewMode(row)"
+                      @blur="viewMode(row, $index)"
+                      :ref="$index"
                     >
                     </el-input>
-                    <span @click="modifyModel(row)" v-else>{{
+                    <span @click="modifyModel(row, $index)" v-else>{{
                       row.valueName
                     }}</span>
                   </template>
                 </el-table-column>
                 <el-table-column prop="address" label="操作" width="width">
-                  <template>
+                  <template slot-scope="{ $index }">
                     <el-button
                       type="danger"
                       icon="el-icon-delete"
                       circle
                       size="mini"
+                      @click="deleteValueName($index)"
                     ></el-button>
                   </template>
                 </el-table-column>
@@ -120,7 +129,12 @@
             </template>
           </el-form-item>
           <el-form-item>
-            <el-button type="primary" @click="saveUpload">保存</el-button>
+            <el-button
+              type="primary"
+              :disabled="addOrAlter.attrValueList.length < 1"
+              @click="saveUpload"
+              >保存</el-button
+            >
             <el-button @click="isshowTabe = true">取消</el-button>
           </el-form-item>
         </el-form>
@@ -135,6 +149,12 @@ export default {
   name: "GoodsMagTow",
   data() {
     return {
+      formInline: {
+        category1Id: "",
+        category2Id: "",
+        category3Id: "",
+      },
+      isAddAttr: true,
       tableData: [],
       isshowTabe: true,
       addOrAlter: {
@@ -147,9 +167,9 @@ export default {
         attrName: [
           { required: true, message: "请输入属性名", trigger: "blur" },
           {
-            min: 2,
+            min: 1,
             max: 10,
-            message: "长度在 2到 10个字符",
+            message: "长度在 1到 10个字符",
             trigger: "change",
           },
         ],
@@ -157,11 +177,24 @@ export default {
     };
   },
   methods: {
-    showList(val) {
-      if (Array.isArray(val)) this.tableData = val;
-      else {
-        this.tableData = val.data;
-        this.addOrAlter.categoryId = val.id;
+    async showList(val) {
+      if (val.c3Id) {
+        this.formInline.category3Id = val.c3Id;
+
+        let result = await this.$API.magtow.getAttributeData(this.formInline);
+        if (result.code === 200) {
+          this.tableData = result.data;
+          this.addOrAlter.categoryId = this.formInline.category3Id;
+        } else {
+          this.$message.error("展示数据出错了");
+        }
+      } else if (val.c2Id) {
+        this.formInline.category2Id = val.c2Id;
+        this.formInline.category3Id = "";
+      } else {
+        this.formInline.category1Id = val.c1Id;
+        this.formInline.category2Id = "";
+        this.formInline.category3Id = "";
       }
     },
     addAttr() {
@@ -173,12 +206,19 @@ export default {
         attrValueList: [],
       };
     },
-
+    // 判断按钮是否可以用
+    isButtonNot() {
+      this.isAddAttr = this.addOrAlter.attrName === "" ? true : false;
+    },
     addAttrValueList() {
       this.addOrAlter.attrValueList.push({
         attrId: undefined,
         valueName: "",
         flag: true,
+      });
+      this.$nextTick(() => {
+        this.$refs[this.addOrAlter.attrValueList.length - 1].focus();
+        this.isAddAttr = true;
       });
     },
     // 修改属性值
@@ -196,18 +236,72 @@ export default {
           return item.valueName === row.valueName;
         }
       });
-      console.log(ass);
+
       if (row.valueName.trim() === "" || ass) {
         this.$message.error("不能为空或属性值相同");
         return;
       }
-
+      this.isAddAttr = false;
       row.flag = false;
     },
-    modifyModel(row) {
+    modifyModel(row, index) {
       row.flag = true;
+      this.$nextTick(() => {
+        this.$refs[index].focus();
+      });
     },
-    saveUpload() {},
+    // 删除属性值
+    deleteValueName(index) {
+      this.$confirm("此操作将删除该属性值, 是否继续?", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning",
+      })
+        .then(() => {
+          this.addOrAlter.attrValueList.splice(index, 1);
+          this.$message({
+            type: "success",
+            message: "删除成功!",
+          });
+        })
+        .catch(() => {
+          this.$message({
+            type: "info",
+            message: "已取消删除",
+          });
+        });
+    },
+    // 保存
+    async saveUpload() {
+      if (this.addOrAlter.attrValueList.length === 0) {
+        this.$message.error("保存失败，不能为空");
+      } else {
+        let result = await this.$API.magtow.addAttribute(this.addOrAlter);
+        if (result.code === 200) {
+          this.$message({
+            type: "success",
+            message: "保存成功！",
+          });
+          this.showList({ c3Id: this.formInline.category3Id });
+          this.isshowTabe = true;
+        } else {
+          this.$message.error("网络问题，保存失败");
+        }
+      }
+    },
+    // 删除属性
+    async deletAttribute(row) {
+      let result = await this.$API.magtow.deleteAttribute(row.id);
+      if (result.code === 200) {
+        this.$message({
+          type: "success",
+          message: "删除属性成功",
+        });
+        this.showList({ c3Id: this.formInline.category3Id });
+      } else {
+        this.message.error("网络不好，删除失败");
+      }
+    },
   },
 };
 </script>
@@ -225,7 +319,7 @@ export default {
   width: 100%;
   margin-bottom: 20px;
 }
-.selectinterval {
+.selectin terval {
   margin: 0 15px 0 10px;
 }
 </style>

@@ -17,6 +17,7 @@ import "@/permission"; // permission control
 import API from "./api/goodsmag";
 
 import ThreeSelect from "@/components/ThreeSelect/ThreeSelect";
+import HintButton from "@/components/HintButton";
 
 /**
  * If you don't want to use mock-server
@@ -32,6 +33,7 @@ if (process.env.NODE_ENV === "production") {
 }
 
 Vue.component(ThreeSelect.name, ThreeSelect);
+Vue.component(HintButton.name, HintButton);
 // set ElementUI lang to EN
 Vue.use(ElementUI, { locale });
 // 如果想要中文版 element-ui，按如下方式声明

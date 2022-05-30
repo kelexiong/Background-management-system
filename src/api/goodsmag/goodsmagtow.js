@@ -22,9 +22,15 @@ export const getAttributeData = ({ category1Id, category2Id, category3Id }) =>
   });
 export const addAttribute = (data) =>
   request({
-    url: "/admin/product/saveAttrInfo",
+    url: "/get-goods/admin/product/saveAttrInfo",
     method: "POST",
     data,
+  });
+
+export const deleteAttribute = (attrId) =>
+  request({
+    url: `/get-goods/admin/product/deleteAttr/${attrId}`,
+    method: "DELETE",
   });
 // {
 //   "attrName": "string",
