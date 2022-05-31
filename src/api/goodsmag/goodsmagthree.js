@@ -31,7 +31,34 @@ export const reqbaseSaleAttrList = () =>
     url: "/get-goods/admin/product/baseSaleAttrList",
     method: "GET",
   });
-// 保存/admin/product/saveSpuInfo post
-// {
-//
-// }
+// 添加/admin/product/saveSpuInfo post
+// /admin/product/updateSpuInfo POST 保存
+export const reqUpdateAndSaveSpuInfo = (spuInfo) => {
+  if (spuInfo.id) {
+    return request({
+      url: "/get-goods/admin/product/updateSpuInfo",
+      method: "POST",
+      data: spuInfo,
+    });
+  } else {
+    return request({
+      url: "/get-goods/admin/product/saveSpuInfo",
+      method: "POST",
+      data: spuInfo,
+    });
+  }
+};
+// 删除SPU /admin/product/deleteSpu/{spuId}
+export const reqDeleteSpu = (spuId) =>
+  request({
+    url: `/get-goods/admin/product/deleteSpu/${spuId}`,
+    method: "DELETE",
+  });
+
+/*
+*@as
+*@ssx
+x
+xxx
+x
+*/

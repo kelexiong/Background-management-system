@@ -1,9 +1,9 @@
 <template>
-  <el-form ref="form" :model="sup" label-width="80px">
-    <el-form-item label="SPU名称">
+  <el-form ref="form" :model="sup" label-width="80px" :rules="rules">
+    <el-form-item label="SPU名称" prop="spuName">
       <el-input v-model="sup.spuName" style="width: 35%"></el-input>
     </el-form-item>
-    <el-form-item label="品牌">
+    <el-form-item label="品牌" prop="tmId">
       <el-select v-model="sup.tmId" placeholder="请选择品牌">
         <el-option
           :label="item.tmName"
@@ -13,7 +13,7 @@
         ></el-option>
       </el-select>
     </el-form-item>
-    <el-form-item label="SPU描述">
+    <el-form-item label="SPU描述" prop="description">
       <el-input
         type="textarea"
         v-model="sup.description"
@@ -74,7 +74,7 @@
             label="属性值名称列表"
             width="width"
           >
-            <template slot-scope="{ row }">
+            <template slot-scope="{ row, $index }">
               <el-tag
                 :key="tag.id"
                 v-for="tag in row.spuSaleAttrValueList"
@@ -86,7 +86,7 @@
               </el-tag>
               <el-input
                 class="input-new-tag"
-                v-if="inputVisible"
+                v-if="row.inputVisible"
                 v-model="inputValue"
                 ref="saveTagInput"
                 size="small"
@@ -98,18 +98,19 @@
                 v-else
                 class="button-new-tag"
                 size="small"
-                @click="showInput(row)"
+                @click="showInput(row, $index)"
                 >+ New Tag</el-button
               >
             </template>
           </el-table-column>
           <el-table-column prop="address" label="操作" width="200">
-            <template slot-scope="{ row }">
+            <template slot-scope="{ $index }">
               <el-button
                 type="danger"
                 icon="el-icon-delete"
                 circle
                 size="mini"
+                @click="sup.spuSaleAttrList.splice($index, 1)"
               ></el-button>
             </template>
           </el-table-column>
@@ -117,7 +118,7 @@
       </template>
     </el-form-item>
     <el-form-item>
-      <el-button type="primary">保存</el-button>
+      <el-button type="primary" @click="saveAllForm('form')">保存</el-button>
       <el-button @click="isshowSPUorSku">取消</el-button>
     </el-form-item>
   </el-form>
@@ -131,34 +132,15 @@ export default {
       sup: {
         category3Id: 0,
         description: "",
-        spuImageList: [
-          // {
-          //   id: 0,
-          //   imgName: "string",
-          //   imgUrl: "string",
-          //   spuId: 0,
-          // },
-        ],
+        spuImageList: [],
         spuName: "",
-        spuSaleAttrList: [
-          // {
-          //   baseSaleAttrId: 0,
-          //   id: 0,
-          //   saleAttrName: "string",
-          //   spuId: 0,
-          //   spuSaleAttrValueList: [
-          //     {
-          //       baseSaleAttrId: 0,
-          //       id: 0,
-          //       isChecked: "string",
-          //       saleAttrName: "string",
-          //       saleAttrValueName: "string",
-          //       spuId: 0,
-          //     },
-          //   ],
-          // },
-        ],
-        tmId: 0,
+        spuSaleAttrList: [],
+        tmId: "",
+      },
+      rules: {
+        spuName: [{ required: true, message: "请输入" }],
+        tmId: [{ required: true, message: "请输入" }],
+        description: [{ required: true, message: "请输入" }],
       },
       TrademarkChooseList: [], //选择品牌列表
       saleAttrList: [], //销售属性下拉
@@ -167,25 +149,61 @@ export default {
       dialogImageUrl: "",
       dialogVisible: false,
       inputVisible: false,
-      inputValue: "",
+      inputValue: "", //存储输入的属性值
     };
   },
   mounted() {},
   methods: {
     handleAdd(response, file, fileList) {
+      console.log(fileList);
       this.spuIamgeList = fileList;
     },
     handleRemove(file, fileList) {
+      console.log();
       this.spuIamgeList = fileList;
     },
     handlePictureCardPreview(file) {
+      console.log(file);
       this.dialogImageUrl = file.url;
       this.dialogVisible = true;
     },
     isshowSPUorSku() {
       this.$emit("isshowSPUorSku", 0);
-      this.sakeid = "";
+      Object.assign(this._data, this.$options.data());
+      console.log(this.sup.spuSaleAttrList);
     },
+    // 获取天机的基本数据
+    async addSpuData(id) {
+      // 初始化数据************************************
+      this.sup.category3Id = id;
+      // this.sup = {
+      // category3Id: id,
+      //   description: "",
+      //   spuImageList: [],
+      //   spuName: "",
+      //   spuSaleAttrList: [],
+      //   tmId: "",
+      // };
+      // this.TrademarkChooseList = []; //选择品牌列表
+      // this.saleAttrList = []; //销售属性下拉
+      // this.sakeid = ""; //储存未添加的属性
+      // this.spuIamgeList = []; //SPU照片墙列表
+      // this.dialogImageUrl = "";
+      // this.dialogVisible = false;
+      // this.inputVisible = false;
+      // this.inputValue = "";
+      // 初始化数据结束************************************
+
+      let getTrademark = await this.$API.magthree.reqTrademarkList();
+      if (getTrademark.code === 200) {
+        this.TrademarkChooseList = getTrademark.data;
+      }
+      let getSalelist = await this.$API.magthree.reqbaseSaleAttrList();
+      if (getSalelist.code === 200) {
+        this.saleAttrList = getSalelist.data;
+      }
+    },
+    // 获取修改的基本数据
     async getSpuData(row) {
       try {
         let getspuid = await this.$API.magthree.reqGetSpuById(row.id);
@@ -210,35 +228,64 @@ export default {
         }
         let getSalelist = await this.$API.magthree.reqbaseSaleAttrList();
         if (getSalelist.code === 200) {
-          console.log(getSalelist);
           this.saleAttrList = getSalelist.data;
         }
       } catch (error) {}
     },
     // 添加属性值
     handleClose(tag) {
-      this.dynamicTags.splice(this.dynamicTags.indexOf(tag), 1);
+      this.sup.spuSaleAttrList.forEach((item) => {
+        if (item.baseSaleAttrId === tag.baseSaleAttrId) {
+          item.spuSaleAttrValueList.splice(
+            item.spuSaleAttrValueList.indexOf(tag),
+            1
+          );
+        }
+      });
+      // this.dynamicTags.splice(this.dynamicTags.indexOf(tag), 1);
     },
 
     showInput(val) {
-      this.inputVisible = true;
+      // console.log(12322222222);
+      // this.sup.spuSaleAttrList.forEach((item) => {
+      //   item.saleAttrName === val.saleAttrName
+      //     ? this.$set(item, "inputVisible", true)
+      //     : this.$set(item, "inputVisible", false);
+      // });
+      this.$set(val, "inputVisible", true);
+
       this.$nextTick(() => {
         this.$refs.saveTagInput.$refs.input.focus();
       });
     },
 
     handleInputConfirm(val) {
-      console.log(val);
       let inputValue = {};
-      inputValue.saleAttrValueName = this.inputValue;
+      this.inputValue = this.inputValue.trim();
       if (this.inputValue) {
-        this.sup.spuSaleAttrList.forEach((item) => {
-          if (item.saleAttrName === val.saleAttrName) {
-            item.spuSaleAttrValueList.push(inputValue);
-          }
+        let result = this.sup.spuSaleAttrList.some((item) => {
+          if (item.saleAttrName === val.saleAttrName)
+            return item.spuSaleAttrValueList.some(
+              (itemson) => itemson.saleAttrValueName === this.inputValue
+            );
         });
+        // let reuslt=val.spuSaleAttrValueList.some(item=>itemson.saleAttrValueName === this.inputValue)
+        if (!result) {
+          inputValue.saleAttrValueName = this.inputValue;
+          inputValue.baseSaleAttrId = val.baseSaleAttrId;
+          val.spuSaleAttrValueList.push(inputValue);
+        } else {
+          this.$message.error("重复了都不知道");
+        }
+
+        // this.sup.spuSaleAttrList.forEach((item) => {
+        //   if (item.saleAttrName === val.saleAttrName) {
+        //     item.spuSaleAttrValueList.push(inputValue);
+        //   }
+        // });
       }
-      this.inputVisible = false;
+
+      val.inputVisible = false;
       this.inputValue = "";
     },
     // 添加属性到属性列表
@@ -248,14 +295,47 @@ export default {
       this.sup.spuSaleAttrList.push(objdata);
       this.sakeid = "";
     },
+    saveAllForm(val) {
+      // if(this.sup.description!==''&&this.sup.category3Id!==''&&this.sup.spuName!===''&&)
+      this.$refs[val].validate(async (valid) => {
+        if (valid) {
+          this.sup.spuImageList = this.spuIamgeList.map((item) => {
+            return {
+              imgName: item.name,
+              imgUrl: item.url,
+              // item.response.data ? item.response.data :
+            };
+          });
+          let result = await this.$API.magthree.reqUpdateAndSaveSpuInfo(
+            this.sup
+          );
+          if (result.code === 200) {
+            this.$message({
+              type: "success",
+              message: "保存成功",
+            });
+
+            this.$emit("retrunShowList", 1);
+            Object.assign(this._data, this.$options.data());
+            console.log(this.sup.spuSaleAttrList);
+          }
+        } else {
+          return false;
+        }
+      });
+    },
   },
   computed: {
     unSalesAttr() {
+      // console.log(this.sup.spuSaleAttrList.length);
+      // if (this.sup.spuSaleAttrList.length !== 0) {
       return this.saleAttrList.filter((item) => {
         return this.sup.spuSaleAttrList.every(
           (item1) => item.name !== item1.saleAttrName
         );
       });
+      // }
+      // return [];
     },
   },
 };

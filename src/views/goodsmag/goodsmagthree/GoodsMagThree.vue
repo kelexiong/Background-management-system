@@ -8,7 +8,7 @@
         <el-button
           type="primary"
           icon="el-icon-edit"
-          @click="alterSPU"
+          @click="addSPU(category3Id)"
           :disabled="category3Id === ''"
           >添加SPU</el-button
         >
@@ -50,13 +50,19 @@
                     size="mini"
                     title="查看SPU的全部Sku列表"
                   ></hint-button>
-                  <hint-button
-                    type="danger"
-                    icon="el-icon-delete"
-                    circle
-                    size="mini"
-                    title="删除SPU"
-                  ></hint-button>
+                  <el-popconfirm
+                    :title="`确定要删除${row.spuName}`"
+                    @onConfirm="removeSpu(row.id)"
+                  >
+                    <hint-button
+                      type="danger"
+                      icon="el-icon-delete"
+                      circle
+                      slot="reference"
+                      size="mini"
+                      title="删除SPU"
+                    ></hint-button>
+                  </el-popconfirm>
                 </el-row>
               </template>
             </el-table-column>
@@ -80,6 +86,7 @@
         ref="spuelement"
         v-show="showSkuOrSpu === 1"
         @isshowSPUorSku="getisshowSOrS"
+        @retrunShowList="retrunShowList(page)"
       ></SpuFrom>
     </el-card>
   </div>
@@ -139,6 +146,12 @@ export default {
       this.limit = limit;
       this.getListInfo();
     },
+    // 添加SPU
+    addSPU(id) {
+      this.showSkuOrSpu = 1;
+      this.isshowTabe = false;
+      this.$refs.spuelement.addSpuData(id);
+    },
     // 修改SPU
     alterSPU(data) {
       this.showSkuOrSpu = 1;
@@ -148,6 +161,22 @@ export default {
     getisshowSOrS(data) {
       this.showSkuOrSpu = data;
       this.isshowTabe = true;
+    },
+    retrunShowList(page) {
+      this.showSkuOrSpu = 0;
+      this.isshowTabe = true;
+      if (this.$refs.spuelement.sup.id) this.getListInfo(page);
+      else this.getListInfo();
+    },
+    async removeSpu(id) {
+      let result = await this.$API.magthree.reqDeleteSpu(id);
+      if (result.code === 200) {
+        this.$message({
+          type: "success",
+          message: "删除成功！！！",
+        });
+        this.getListInfo(this.tableData > 1 ? this.page : this.page - 1);
+      } else this.$message.error("删除失败，网络问题");
     },
   },
   watch: {
