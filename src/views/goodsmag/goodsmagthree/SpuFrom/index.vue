@@ -155,22 +155,18 @@ export default {
   mounted() {},
   methods: {
     handleAdd(response, file, fileList) {
-      console.log(fileList);
       this.spuIamgeList = fileList;
     },
     handleRemove(file, fileList) {
-      console.log();
       this.spuIamgeList = fileList;
     },
     handlePictureCardPreview(file) {
-      console.log(file);
       this.dialogImageUrl = file.url;
       this.dialogVisible = true;
     },
     isshowSPUorSku() {
       this.$emit("isshowSPUorSku", 0);
       Object.assign(this._data, this.$options.data());
-      console.log(this.sup.spuSaleAttrList);
     },
     // 获取天机的基本数据
     async addSpuData(id) {
@@ -317,7 +313,6 @@ export default {
 
             this.$emit("retrunShowList", 1);
             Object.assign(this._data, this.$options.data());
-            console.log(this.sup.spuSaleAttrList);
           }
         } else {
           return false;

@@ -34,6 +34,7 @@
                     circle
                     size="mini"
                     title="添加Sku"
+                    @click="addSkuInfo(row)"
                   ></hint-button>
                   <hint-button
                     type="warning"
@@ -88,6 +89,11 @@
         @isshowSPUorSku="getisshowSOrS"
         @retrunShowList="retrunShowList(page)"
       ></SpuFrom>
+      <SkuFrom
+        ref="skuelement"
+        v-show="showSkuOrSpu === 2"
+        @onBack="getisshowSOrS"
+      ></SkuFrom>
     </el-card>
   </div>
 </template>
@@ -158,10 +164,18 @@ export default {
       this.isshowTabe = false;
       this.$refs.spuelement.getSpuData(data);
     },
+    // 添加Sku
+    addSkuInfo(row) {
+      this.showSkuOrSpu = 2;
+      this.isshowTabe = false;
+      this.$refs.skuelement.getSkuInfo(this.category1Id, this.category2Id, row);
+    },
+    // 切换show模块
     getisshowSOrS(data) {
       this.showSkuOrSpu = data;
       this.isshowTabe = true;
     },
+    // 跳转页面
     retrunShowList(page) {
       this.showSkuOrSpu = 0;
       this.isshowTabe = true;

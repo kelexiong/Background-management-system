@@ -55,6 +55,19 @@ export const reqDeleteSpu = (spuId) =>
     method: "DELETE",
   });
 
+// SKU模块GET /admin/product/spuSaleAttrList/{spuId}  this.$API.magtow.getAttributeData  this.reqSpuImageList
+export const reqspuSaleAttrList = (spuId) =>
+  request({
+    url: `/get-goods/admin/product/spuSaleAttrList/${spuId}`,
+    method: "GET",
+  });
+// /admin/product/saveSkuInfo post
+export const reqSaveSkuInfo = (skuInfo) =>
+  request({
+    url: "/get-goods/admin/product/saveSkuInfo",
+    method: "POST",
+    data: skuInfo,
+  });
 /*
 *@as
 *@ssx
