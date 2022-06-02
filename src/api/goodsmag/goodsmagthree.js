@@ -68,6 +68,12 @@ export const reqSaveSkuInfo = (skuInfo) =>
     method: "POST",
     data: skuInfo,
   });
+// GET /admin/product/findBySpuId/{spuId}
+export const reqFindBySpuId = (spuId) =>
+  request({
+    url: `/get-goods/admin/product/findBySpuId/${spuId}`,
+    method: "GET",
+  });
 /*
 *@as
 *@ssx

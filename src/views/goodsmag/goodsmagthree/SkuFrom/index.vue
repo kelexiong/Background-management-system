@@ -157,6 +157,7 @@ export default {
   methods: {
     backMagT() {
       this.$emit("onBack", 0);
+      Object.assign(this._data, this.$options.data());
     },
     // 获取基本数据
     async getSkuInfo(category1Id, category2Id, row) {

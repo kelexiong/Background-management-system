@@ -50,6 +50,7 @@
                     circle
                     size="mini"
                     title="查看SPU的全部Sku列表"
+                    @click="lookSkuInfo(row)"
                   ></hint-button>
                   <el-popconfirm
                     :title="`确定要删除${row.spuName}`"
@@ -94,6 +95,35 @@
         v-show="showSkuOrSpu === 2"
         @onBack="getisshowSOrS"
       ></SkuFrom>
+      <el-dialog
+        :title="`${spuName}SKU详情`"
+        :visible.sync="dialogTableVisible"
+        :before-close="close"
+      >
+        <el-table :data="gridData" border v-loading="loading">
+          <el-table-column
+            property="skuName"
+            label="名称"
+            width="width"
+          ></el-table-column>
+          <el-table-column
+            property="price"
+            label="价格"
+            width="100"
+          ></el-table-column>
+          <el-table-column
+            property="weight"
+            label="重量"
+            width="100"
+          ></el-table-column>
+          <!--      property="address" -->
+          <el-table-column label="默认图片" width="200">
+            <template slot-scope="{ row }">
+              <img :src="row.skuDefaultImg" alt="" style="width: 100px" />
+            </template>
+          </el-table-column>
+        </el-table>
+      </el-dialog>
     </el-card>
   </div>
 </template>
@@ -118,8 +148,21 @@ export default {
       page: 1,
       limit: 5,
       total: 0,
+      // ...........
+      gridData: [
+        // {
+        //   date: "2016-05-02",
+        //   name: "王小虎",
+        //   address: "上海市普陀区金沙江路 1518 弄",
+        // },
+      ],
+      dialogTableVisible: false,
+      dialogFormVisible: false,
+      spuName: "",
+      loading: true,
     };
   },
+  //
   methods: {
     showList(val) {
       if (val.c3Id) {
@@ -169,6 +212,23 @@ export default {
       this.showSkuOrSpu = 2;
       this.isshowTabe = false;
       this.$refs.skuelement.getSkuInfo(this.category1Id, this.category2Id, row);
+    },
+    // 查看SKU信息
+    async lookSkuInfo(row) {
+      // Object.assign(this._data.gridData)
+      this.dialogTableVisible = true;
+      this.spuName = row.spuName;
+      let result = await this.$API.magthree.reqFindBySpuId(row.id);
+      if (result.code === 200) {
+        this.gridData = result.data;
+        this.loading = false;
+      }
+    },
+    // 清除数据残余
+    close(done) {
+      this.loading = true;
+      this.gridData = [];
+      done();
     },
     // 切换show模块
     getisshowSOrS(data) {
